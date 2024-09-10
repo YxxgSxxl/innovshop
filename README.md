@@ -1,8 +1,8 @@
-* InnovShop
+# InnovShop
 
-InnovShop est un projet réalisé avec Symfony 7
+* InnovShop est un projet réalisé avec Symfony 7
 
-** Commandes Utiles
+## Commandes Utiles
 
 symfony check:requirements
 
