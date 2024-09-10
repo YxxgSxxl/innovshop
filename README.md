@@ -11,7 +11,7 @@
 * symfony console make:registration-form  
   
 * symfony console make:entity  
-* symfony console make:entity "nomentité"  
+* symfony console make:entity "nomentité" (modif une entité déjà existante)
   
 * symfony console make:migration  
 * symfony console d:s:u -f  
