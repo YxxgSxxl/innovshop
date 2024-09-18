@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Product;
 use App\Repository\PostRepository;
 use App\Repository\ProductRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -41,11 +43,20 @@ class FrontController extends AbstractController
     }
 
     #[Route('/catalogue', name: 'app_front_catalogue')]
-    public function catalogue(ProductRepository $ProductRepository): Response
+    public function catalogue(ProductRepository $ProductRepository, PaginatorInterface $paginator, Request $request): Response
     {
+        $dql = "SELECT a FROM AcmeMainBundle:Article a";
+        $query = $ProductRepository->findAll();
+
+        $products = $paginator->paginate(
+            $query, /* query NOT result */
+            $request->query->getInt('page', 1), /*page number*/
+            2 /*limit per page*/
+        );
+
         return $this->render('front/catalogue.html.twig', [
             // 'controller_name' => 'FrontController',
-            'products' => $ProductRepository->findAll(),
+            'products' => $products,
         ]);
     }
 

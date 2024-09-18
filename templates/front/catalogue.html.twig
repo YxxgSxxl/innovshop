@@ -29,6 +29,11 @@
                 </div>
             </div>
             {% endfor %}
+            
+            {# display navigation #}
+            <div class="navigation">
+                {{ knp_pagination_render(products) }}
+            </div>
         </section>
         </header>
 {% endblock %}

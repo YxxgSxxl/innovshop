@@ -23,3 +23,4 @@
 * symfony console make:admin:crud  
 
 * composer require symfony/security-bundle
+* composer require knplabs/knp-paginator-bundle
