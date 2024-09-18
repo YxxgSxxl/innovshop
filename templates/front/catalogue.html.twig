@@ -6,5 +6,29 @@
         <!-- Masthead-->
         <header class="masthead bg-primary text-white text-center">
         <h1>Our Catalogue</h1>
+        <section>
+            {% for product in products %}
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        <!-- Post preview-->
+                        <div class="post-preview">
+                            <div class="card mb-4 shadow-sm">
+                                <div class="d-flex justify-content-center">
+                                    <img src="/images/{{ product.image }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; width: 200px; object-fit: cover;">
+                                </div>
+                                <div class="card-body text-dark">
+                                    <h5 class="card-title">{{ product.name }}</h5>
+                                    <p class="card-text">{{ product.description|raw }}</p>
+                                    {# <p class="card-text">{{ product.tags }}</p> #}
+                                    <a href="{{ path('app_front_catalogue_detail', {'id': product.id}) }}" class="btn btn-primary">View</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </section>
         </header>
 {% endblock %}

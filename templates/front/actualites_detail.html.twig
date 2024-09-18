@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello FrontController!{% endblock %}
+
+{% block body %}
+        <!-- Masthead-->
+        <header class="masthead bg-primary text-white text-center">
+        <h1>Post n°{{ post.id }}</h1>
+
+        <div class="container">
+            <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="text-uppercase">{{ post.title }}</h2>
+                <p class="lead">{{ post.content|raw }}</p>
+                <p><small>Published on {{ post.createdAt|date('F j, Y') }}</small></p>
+            </div>
+            </div>
+        </div>
+        </header>
+{% endblock %}

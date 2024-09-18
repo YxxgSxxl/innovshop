@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Product;
+use App\Repository\PostRepository;
+use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -9,10 +12,15 @@ use Symfony\Component\Routing\Attribute\Route;
 class FrontController extends AbstractController
 {
     #[Route('/', name: 'app_front')]
-    public function index(): Response
+    public function index(ProductRepository $ProductRepository): Response
     {
+        $products = $ProductRepository->findLastProducts();
+
+        // dd(vars: $products);
+
         return $this->render('front/index.html.twig', [
-            'controller_name' => 'FrontController',
+            // 'controller_name' => 'FrontController',
+            'products' => $products,
         ]);
     }
 
@@ -33,18 +41,47 @@ class FrontController extends AbstractController
     }
 
     #[Route('/catalogue', name: 'app_front_catalogue')]
-    public function catalogue(): Response
+    public function catalogue(ProductRepository $ProductRepository): Response
     {
         return $this->render('front/catalogue.html.twig', [
-            'controller_name' => 'FrontController',
+            // 'controller_name' => 'FrontController',
+            'products' => $ProductRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/catalogue/{id}', name: 'app_front_catalogue_detail')]
+    public function catalogueDetail(Product $product): Response
+    {
+        // dd($product);
+
+        return $this->render('front/catalogue_detail.html.twig', [
+            'product' => $product,
         ]);
     }
 
     #[Route('/actualites', name: 'app_front_actualites')]
-    public function actualites(): Response
+    public function actualites(PostRepository $postRepository): Response
     {
+        $posts = $postRepository->findAll();
+
+        // dd($posts);
+
         return $this->render('front/actualites.html.twig', [
-            'controller_name' => 'FrontController',
+            // 'controller_name' => 'FrontController',
+            'posts' => $posts,
+        ]);
+    }
+
+    #[Route('/actualites/{id}', name: 'app_front_actualites_detail')]
+    public function actualites_show(PostRepository $postRepository, $id): Response
+    {
+        $post = $postRepository->findOneBy(['id' => $id]);
+
+        // dd($post);
+
+        return $this->render('front/actualites_detail.html.twig', [
+            // 'controller_name' => 'FrontController',
+            'post' => $post,
         ]);
     }
 }

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello FrontController!{% endblock %}
+{% block title %}Page d'accueil !{% endblock %}
 
 {% block body %}
         <!-- Masthead-->
@@ -17,7 +17,21 @@
                     <div class="divider-custom-line"></div>
                 </div>
                 <!-- Masthead Subheading-->
-                <p class="masthead-subheading font-weight-light mb-0">Graphic Artist - Web Designer - Illustrator</p>
+                <h2>Les derniers produits:</h2>
+                <div class="row">
+                    {% for product in products %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <img class="card-img-top" src="{{ product.image }}" alt="{{ product.name }}">
+                            <div class="card-body text-dark">
+                                <h5 class="card-title">{{ product.name }}</h5>
+                                <p class="card-text">{{ product.description|raw }}</p>
+                                <a href="{{ path('app_front_catalogue_detail', {'id': product.id}) }}" class="btn btn-primary">View</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
         </header>
 {% endblock %}
