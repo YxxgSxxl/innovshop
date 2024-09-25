@@ -16,28 +16,59 @@
             </div>
             </div>
         </div>
+            <hr>
 
            {{ form_start(form) }}
                 {{ form_widget(form) }}
                 <button class="btn">{{ button_label|default('Save') }}</button>
             {{ form_end(form) }}
-            <hr>
+            
             <h4>Liste des commentaires</h4>
-        {% for comment in post.comments %}
             <div class="container mt-4">
             <div class="row">
                 <div class="col-lg-8 mx-auto">
-                <div class="card mb-3">
-                    <div class="card-body text-dark">
-                    <p class="card-text">{{ comment.author|raw }}</p>
-                    <p class="card-text">{{ comment.content|raw }}</p>
-                    <p class="card-text"><small class="text-muted">Published on {{ comment.createdAt|date('F j, Y') }}</small></p>
+
+                    <div class="d-flex flex-column justify-content-center gap-4">
+                        {% for comment in post.comments %}
+                        <div class="card mb-3">
+                            <div class="card-body text-dark">
+                            <small>{{ comment.author }}</small>
+                            <p>{{ comment.content }}</p>
+                            {% set nbLikes = 0 %}
+                            {% set nbDisLikes = 0 %}
+
+                            {% set userLike = 'NO_LIKE' %}
+
+                            {% for avi in comment.avis %}
+                            {% if avi.isLiked == 1 %}
+                                {% set nbLikes =  nbLikes + 1 %}
+                                {{ nbLikes }} likes
+                            {% else %}
+                                {% set nbDisLikes = nbDisLikes + 1 %}
+                                {{ nbDisLikes }} dislike
+                            {% endif %}
+                            {% if app.user and avi.user == app.user %}
+                            {% if avi.isLiked == 1 %}
+                            {% set userLike = 'LIKE' %}
+                            <a href="{{ path('user_dislike', {id:comment.id}) }}" class="btn btn-danger" value="{% set userLike = 1 %}">👎</a>
+
+                            {% elseif avi.isLiked == 0 %}
+                                {% set userLike = 'DISLIKE' %}
+                                <a href="{{ path('user_like', {id:comment.id}) }}" class="btn btn-success" value="{% set userLike = 0 %}">👍</a>
+                            {% endif %}
+                            {% endif %}
+                            {% endfor %}
+
+                            {% if userLike == 'NO_LIKE' %}
+                                <a href="{{ path('user_like', {id:comment.id}) }}" class="btn btn-success" value="{% set userLike = 1 %}">👍</a>
+                                <a href="{{ path('user_dislike', {id:comment.id}) }}" class="btn btn btn-danger" value="{% set userLike = 0 %}">👎</a>
+                            {% endif %}
+                        </div>
+                        </div>
+                        {% endfor %}
                     </div>
                 </div>
-                </div>
             </div>
             </div>
-        {% endfor %}
-
         </header>
 {% endblock %}

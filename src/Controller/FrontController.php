@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Avis;
 use App\Entity\Category;
 use App\Entity\Comment;
 use App\Entity\Post;
@@ -99,6 +100,7 @@ class FrontController extends AbstractController
             'posts' => $posts,
         ]);
     }
+    
 
     #[Route('/actualites/{id}', name: 'app_front_actualites_detail')]
     public function actualites_show(Post $post, CommentRepository $commentRepository, $id, Request $request, EntityManagerInterface $em): Response
@@ -107,6 +109,19 @@ class FrontController extends AbstractController
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
         $user = $this->getUser();
+
+        // $nbr_like = 0;
+        // $nbr_dislike = 0;
+
+        // foreach ($post->getComments() as $comments) {
+        //     foreach ($comments->getAvis() as $avis) {
+        //         if ($avis == true) {
+        //             $nbr_like++;
+        //         } elseif ($avis == false) {
+        //             $nbr_dislike++;
+        //         }
+        //     }
+        // }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $comment->setPosts($post)->setAuthor($user)->setValid(false);
@@ -122,6 +137,61 @@ class FrontController extends AbstractController
             // 'controller_name' => 'FrontController',
             'post' => $post,
             'form' => $form,
+            // 'nbr_like' => $nbr_like,
+            // 'nbr_dislike' => $nbr_dislike,
         ]);
+    }
+
+    #[Route('/dislike/{id}', name: 'user_dislike')]
+    public function dislike(Comment $comment, EntityManagerInterface $em): Response
+    {
+        $user = $this->getUser();
+        $avis = $comment->getAvis();
+        $avi = null;
+
+        $isAlreadyAct = false;
+
+        foreach ($avis as $avi){
+            if($avi->getUser() == $user){
+                $avi->setLiked(false);
+                $isAlreadyAct = true;
+            }
+        }
+        if($isAlreadyAct == false){
+            $avi = new Avis();
+            $avi->setLiked(false)->setUser($user)->setComments($comment);
+        }
+        $em->persist($avi);
+        $em->flush();
+
+        return $this->redirectToRoute('app_front_actualites_detail', ['id'=> $comment->getPosts()->getId()]);
+
+    }
+
+    #[Route('/like/{id}', name: 'user_like')]
+    public function like(Comment $comment, EntityManagerInterface $em): Response
+    {
+        $user = $this->getUser();
+        $avis = $comment->getAvis();
+        $avi = null;
+
+        $isAlreadyAct = false;
+
+        foreach ($avis as $avi){
+            if($avi->getUser() == $user){
+                $avi->setLiked(true);
+                $isAlreadyAct = true;
+            }
+        }
+        if($isAlreadyAct == false){
+            $avi = new Avis();
+            $avi->setLiked(true)->setUser($user)->setComments($comment);
+        }
+        $em->persist($avi);
+        $em->flush();
+
+        return $this->redirectToRoute('app_front_actualites_detail', ['id'=> $comment->getPosts()->getId()]);
+
+
     }
 }
