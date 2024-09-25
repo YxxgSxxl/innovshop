@@ -1,74 +1,87 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello FrontController!{% endblock %}
+{% block title %}Post Details{% endblock %}
 
 {% block body %}
-        <!-- Masthead-->
-        <header class="masthead bg-primary text-white text-center">
-        <h1>Post n°{{ post.id }}</h1>
+    <!-- Masthead-->
+    <header class="masthead bg-primary text-white text-center py-5">
+        <h1 class="display-4">Post n°{{ post.id }}</h1>
 
         <div class="container">
             <div class="row">
-            <div class="col-lg-8 mx-auto">
-                <h2 class="text-uppercase">{{ post.title }}</h2>
-                <p class="lead">{{ post.content|raw }}</p>
-                <p><small>Published on {{ post.createdAt|date('F j, Y') }}</small></p>
-            </div>
+                <div class="col-lg-8 mx-auto">
+                    <h2 class="text-uppercase">{{ post.title }}</h2>
+                    <p class="lead">{{ post.content|raw }}</p>
+                    <p><small>Published on {{ post.createdAt|date('F j, Y') }}</small></p>
+                </div>
             </div>
         </div>
-            <hr>
+        <hr>
 
-           {{ form_start(form) }}
-                {{ form_widget(form) }}
-                <button class="btn">{{ button_label|default('Save') }}</button>
+        <!-- Form for comments -->
+        <div class="container mt-4">
+            {{ form_start(form) }}
+                <div class="form-group">
+                    {{ form_widget(form) }}
+                </div>
+                <button class="btn btn-primary mt-2">{{ button_label|default('Save') }}</button>
             {{ form_end(form) }}
-            
-            <h4>Liste des commentaires</h4>
-            <div class="container mt-4">
+        </div>
+
+        <!-- Comments Section -->
+        <div class="container mt-5">
+            <h4 class="text-uppercase mb-4">Liste des commentaires</h4>
             <div class="row">
                 <div class="col-lg-8 mx-auto">
-
-                    <div class="d-flex flex-column justify-content-center gap-4">
+                    <div class="d-flex flex-column gap-4">
                         {% for comment in post.comments %}
-                        <div class="card mb-3">
-                            <div class="card-body text-dark">
-                            <small>{{ comment.author }}</small>
-                            <p>{{ comment.content }}</p>
-                            {% set nbLikes = 0 %}
-                            {% set nbDisLikes = 0 %}
+                            <div class="card mb-3 shadow-sm">
+                                <div class="card-body text-dark">
+                                    <div class="d-flex justify-content-between">
+                                        <small class="text-muted">{{ comment.author }}</small>
+                                        <small class="text-muted">{{ comment.createdAt|date('F j, Y') }}</small>
+                                    </div>
+                                    <p class="mt-2">{{ comment.content }}</p>
+                                    <div class="d-flex align-items-center mt-3">
+                                        {% set nbLikes = 0 %}
+                                        {% set nbDisLikes = 0 %}
+                                        {% set userLike = 'NO_LIKE' %}
 
-                            {% set userLike = 'NO_LIKE' %}
+                                        <!-- Like/Dislike calculation -->
+                                        {% for avi in comment.avis %}
+                                            {% if avi.isLiked == 1 %}
+                                                {% set nbLikes =  nbLikes + 1 %}
+                                            {% else %}
+                                                {% set nbDisLikes = nbDisLikes + 1 %}
+                                            {% endif %}
+                                            {% if app.user and avi.user == app.user %}
+                                                {% if avi.isLiked == 1 %}
+                                                    {% set userLike = 'LIKE' %}
+                                                {% else %}
+                                                    {% set userLike = 'DISLIKE' %}
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
 
-                            {% for avi in comment.avis %}
-                            {% if avi.isLiked == 1 %}
-                                {% set nbLikes =  nbLikes + 1 %}
-                                {{ nbLikes }} likes
-                            {% else %}
-                                {% set nbDisLikes = nbDisLikes + 1 %}
-                                {{ nbDisLikes }} dislike
-                            {% endif %}
-                            {% if app.user and avi.user == app.user %}
-                            {% if avi.isLiked == 1 %}
-                            {% set userLike = 'LIKE' %}
-                            <a href="{{ path('user_dislike', {id:comment.id}) }}" class="btn btn-danger" value="{% set userLike = 1 %}">👎</a>
+                                        <!-- Display like/dislike buttons -->
+                                        <span class="mr-2"><strong>{{ nbLikes }}</strong> 👍</span>
+                                        <span class="mr-4"><strong>{{ nbDisLikes }}</strong> 👎</span>
 
-                            {% elseif avi.isLiked == 0 %}
-                                {% set userLike = 'DISLIKE' %}
-                                <a href="{{ path('user_like', {id:comment.id}) }}" class="btn btn-success" value="{% set userLike = 0 %}">👍</a>
-                            {% endif %}
-                            {% endif %}
-                            {% endfor %}
-
-                            {% if userLike == 'NO_LIKE' %}
-                                <a href="{{ path('user_like', {id:comment.id}) }}" class="btn btn-success" value="{% set userLike = 1 %}">👍</a>
-                                <a href="{{ path('user_dislike', {id:comment.id}) }}" class="btn btn btn-danger" value="{% set userLike = 0 %}">👎</a>
-                            {% endif %}
-                        </div>
-                        </div>
+                                        {% if userLike == 'NO_LIKE' %}
+                                            <a href="{{ path('user_like', {id:comment.id}) }}" class="btn btn-outline-success btn-sm mr-2">👍</a>
+                                            <a href="{{ path('user_dislike', {id:comment.id}) }}" class="btn btn-outline-danger btn-sm">👎</a>
+                                        {% elseif userLike == 'LIKE' %}
+                                            <a href="{{ path('user_dislike', {id:comment.id}) }}" class="btn btn-danger btn-sm">👎</a>
+                                        {% elseif userLike == 'DISLIKE' %}
+                                            <a href="{{ path('user_like', {id:comment.id}) }}" class="btn btn-success btn-sm">👍</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
                         {% endfor %}
                     </div>
                 </div>
             </div>
-            </div>
-        </header>
+        </div>
+    </header>
 {% endblock %}
