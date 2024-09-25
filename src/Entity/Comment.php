@@ -34,9 +34,13 @@ class Comment
     #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'comments')]
     private Collection $avis;
 
+    #[ORM\ManyToOne]
+    private ?User $author = null;
+
     public function __construct()
     {
         $this->avis = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -118,6 +122,18 @@ class Comment
                 $avi->setComments(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): static
+    {
+        $this->author = $author;
 
         return $this;
     }

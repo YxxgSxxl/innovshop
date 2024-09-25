@@ -3,10 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Comment;
 use App\Entity\Product;
+use App\Form\CommentType;
 use App\Repository\CategoryRepository;
+use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
 use App\Repository\ProductRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -96,15 +100,42 @@ class FrontController extends AbstractController
     }
 
     #[Route('/actualites/{id}', name: 'app_front_actualites_detail')]
-    public function actualites_show(PostRepository $postRepository, $id): Response
+    public function actualites_show(PostRepository $postRepository, CommentRepository $commentRepository, $id): Response
     {
         $post = $postRepository->findOneBy(['id' => $id]);
+
+         dd($post);
+
+        return $this->render('front/actualites_detail.html.twig', [
+            // 'controller_name' => 'FrontController',
+            'post' => $post,
+        ]);
+    }
+
+    #[Route('/actualites-comment/{id}', name: 'app_front_actualites_comment')]
+    public function actualites_comment(PostRepository $postRepository, $id, Request $request, EntityManagerInterface $em): Response
+    {
+
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+        $post = $postRepository->findOneBy(['id' => $id]);
+        $user = $this->getUser();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setPosts($post)->setAuthor($user)->setValid(false);
+            $em->persist($comment);
+            $em->flush();
+
+            return $this->redirectToRoute('app_front_actualites_comment', ['id' => $post->getId()]);
+
+        }
 
         // dd($post);
 
         return $this->render('front/actualites_detail.html.twig', [
             // 'controller_name' => 'FrontController',
             'post' => $post,
+            'form' => $form
         ]);
     }
 }
