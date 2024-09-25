@@ -1,0 +1,10 @@
+<li class="dropdown nav-item mx-0 mx-lg-1">
+    <a href="#" class="dropdown-toggle nav-link py-3 px-0 px-lg-3 rounded" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Categories
+    </a>
+    <ul class="dropdown-menu">
+        {% for category in this.categories %}
+            <li><a class="dropdown-item" href="{{ path('categorie_show', {id:category.id}) }}">{{ category.name }}</a></li>
+        {% endfor %}
+    </ul>
+</li>

@@ -15,10 +15,6 @@
         <link href="{{ asset('css/styles.css') }}" rel="stylesheet" />
         {% block stylesheets %}
         {% endblock %}
-
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
     </head>
     <body>
     {# Include the navigation bar in the base template #}

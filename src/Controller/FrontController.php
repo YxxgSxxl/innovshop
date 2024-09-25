@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Product;
+use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use App\Repository\ProductRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -69,6 +71,16 @@ class FrontController extends AbstractController
             'product' => $product,
         ]);
     }
+
+    #[Route("/categorie/{id}", name: "categorie_show")]
+    public function showCategorie(Category $categorie)
+    {
+        // Logique pour afficher la catégorie
+        return $this->render('front/categorie_show.html.twig', [
+            'categorie' => $categorie,
+        ]);
+    }
+
 
     #[Route('/actualites', name: 'app_front_actualites')]
     public function actualites(PostRepository $postRepository): Response

@@ -10,9 +10,25 @@
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{{ path('app_front_actualites') }}">Actualités</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{{ path('app_front_catalogue') }}">Catalogue</a></li>
+                        {{ component('categoryMenu') }}
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{{ path('app_front_about') }}">À Propos</a></li>    
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="{{ path('app_front_contact') }}">Contact</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
+
+        
+<!-- Sous-menu des catégories -->
+<div id="categories-menu" style="display:none;">
+  <ul>
+    {# {% for categorie in categories %} #}
+      {# <li><a href="{{ path('categorie_show', { 'id': categorie.id }) }}">{{ categorie.nom }}</a></li> #}
+      lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
+    {# {% endfor %} #}
+  </ul>
+</div>
+
+<script>
+
+</script>
