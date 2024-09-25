@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Entity\Comment;
+use App\Entity\Post;
 use App\Entity\Product;
 use App\Form\CommentType;
 use App\Repository\CategoryRepository;
@@ -100,42 +101,27 @@ class FrontController extends AbstractController
     }
 
     #[Route('/actualites/{id}', name: 'app_front_actualites_detail')]
-    public function actualites_show(PostRepository $postRepository, CommentRepository $commentRepository, $id): Response
+    public function actualites_show(Post $post, CommentRepository $commentRepository, $id, Request $request, EntityManagerInterface $em): Response
     {
-        $post = $postRepository->findOneBy(['id' => $id]);
-
-         dd($post);
-
-        return $this->render('front/actualites_detail.html.twig', [
-            // 'controller_name' => 'FrontController',
-            'post' => $post,
-        ]);
-    }
-
-    #[Route('/actualites-comment/{id}', name: 'app_front_actualites_comment')]
-    public function actualites_comment(PostRepository $postRepository, $id, Request $request, EntityManagerInterface $em): Response
-    {
-
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
-        $post = $postRepository->findOneBy(['id' => $id]);
         $user = $this->getUser();
+
         if ($form->isSubmitted() && $form->isValid()) {
             $comment->setPosts($post)->setAuthor($user)->setValid(false);
             $em->persist($comment);
             $em->flush();
 
-            return $this->redirectToRoute('app_front_actualites_comment', ['id' => $post->getId()]);
+            return $this->redirectToRoute('app_front_actualites_detail', ['id' => $post->getId()]);
 
         }
 
-        // dd($post);
 
         return $this->render('front/actualites_detail.html.twig', [
             // 'controller_name' => 'FrontController',
             'post' => $post,
-            'form' => $form
+            'form' => $form,
         ]);
     }
 }
