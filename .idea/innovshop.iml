@@ -145,6 +145,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/nelmio/cors-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/ux-live-component" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/ux-twig-component" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/brevo-mailer" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

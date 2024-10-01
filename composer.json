@@ -21,6 +21,7 @@
         "symfony/apache-pack": "^1.0",
         "symfony/asset": "7.1.*",
         "symfony/asset-mapper": "7.1.*",
+        "symfony/brevo-mailer": "7.1.*",
         "symfony/console": "7.1.*",
         "symfony/doctrine-messenger": "7.1.*",
         "symfony/dotenv": "7.1.*",

@@ -16,6 +16,23 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
+    public function findAllProducts(): array
+    {
+        return $this->createQueryBuilder('pa')
+            ->select('pa.id, pa.name, pa.description, pa.image, pa.createdAt, pa.updatedAt')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByID($id)
+    {
+        return $this->createQueryBuilder('pa')
+            ->select('pa.id, pa.name, pa.description, pa.image, pa.createdAt, pa.updatedAt')
+            ->where('pa.id = :id')->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     /**
      * @return Product[] Returns an array of Product objects
      */
@@ -25,8 +42,7 @@ class ProductRepository extends ServiceEntityRepository
             ->orderBy('p.id', 'DESC')
             ->setMaxResults(3)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     //    public function findOneBySomeField($value): ?Product
